@@ -88,6 +88,19 @@ class SiteController extends Controller
 		echo $_GET['id'];
 	}
 
+	public function actionDevos()
+	{
+		$devos = Devos::model()->findAll();
+
+		$params = array('devos' => $devos);
+
+		if(Yii::app()->request->isAjaxRequest) {
+       		$this->renderPartial('devos' , $params , false, true);
+       	}else{
+       		$this->render('devos' , $params);
+       	}
+	}
+
 	public function actionUser()
 	{
 		// renders the view file 'protected/views/site/index.php'

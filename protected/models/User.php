@@ -19,7 +19,8 @@ class User extends CActiveRecord
     {
         return array(
             'dates'=>array(self::HAS_MANY, 'TimelineDate', 'id_date'),
-            'friends'=>array(self::HAS_MANY, 'Friend', 'id')
+            'friends'=>array(self::HAS_MANY, 'Friend', 'id'),
+            'devos'=>array(self::HAS_MANY, 'Devos', 'id')
         );
     }
     

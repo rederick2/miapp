@@ -140,29 +140,24 @@
 
 <div id="menu">
 
-    <img class="imgProfile" src="<?php echo Yii::app()->baseUrl.'/uploads/user.png'; ?>" />
+    <img class="imgProfile" src="<?php echo !Yii::app()->user->isGuest ? $user->picture : Yii::app()->baseUrl.'/uploads/user.png'; ?>" />
 
     <ul>
-        <li><a href="#" class="link" data-location="<?php echo Yii::app()->baseUrl.'/site/music'; ?>"><i class="icon-book"></i>Devocionales</a></li>
+        <li><a href="#" class="link" data-location="<?php echo Yii::app()->baseUrl.'/site/devos'; ?>"><i class="icon-book"></i>Devocionales</a></li>
         <li><a href="#" class="link" data-location="<?php echo Yii::app()->baseUrl.'/site/music'; ?>"><i class="icon-calendar"></i>Eventos</a></li>
         <li><a href="#" class="link" data-location="<?php echo Yii::app()->baseUrl.'/site/music'; ?>"><i class="icon-music"></i>Musica</a></li>
         <li><a href="#" class="link" data-location="<?php echo Yii::app()->baseUrl.'/site/music'; ?>"><i class="icon-group"></i>Amigos</a></li>
+        <li><a href="<?php echo Yii::app()->baseUrl.'/site/logout'; ?>"><i class="icon-reply"></i>Salir</a></li>
     </ul>
 
 </div>
 
 
-<div class="container" id="page">
-
-	<?php if(isset($this->breadcrumbs)):?>
-		<?php $this->widget('bootstrap.widgets.TbBreadcrumbs', array(
-			'links'=>$this->breadcrumbs,
-		)); ?><!-- breadcrumbs -->
-	<?php endif?>
+    <div class="container" id="page">
 
 	<?php echo $content; ?>
 
-
+    </div><!-- page -->
 
 	<div class="clear"></div>
 
@@ -171,12 +166,13 @@
 		<?php //echo Yii::powered(); ?>
 	</div><!-- footer -->
 
-</div><!-- page -->
+
 
 <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/skrollr.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/iscroll.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery.pnotify.min.js"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/masonry.min.js"></script>
 <!--<script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery.history.js"></script>-->
 
     <script type="text/javascript">
@@ -188,6 +184,13 @@
                 return 1-p;
             }
         }
+    });
+
+    var $container = $('.devos');
+    // initialize
+    $container.masonry({
+      //columnWidth: 200,
+      itemSelector: '.item-devo'
     });
 </script>
 

@@ -1,6 +1,6 @@
 <ul class="playlist">
 
-  <a class="profile link" href="#" data-location="<?php echo !Yii::app()->user->isGuest ? Yii::app()->baseUrl.'/'.Yii::app()->user->name :Yii::app()->baseUrl.'/site/login'; ?>"><span><?php echo !Yii::app()->user->isGuest ? Yii::app()->user->name : 'Inicia Sesión'; ?></span></a>
+  <a class="profile <?php echo !Yii::app()->user->isGuest ? 'link':''; ?>" data-toggle="modal" data-target="#loginModal" href="#" data-location="<?php echo !Yii::app()->user->isGuest ? Yii::app()->baseUrl.'/'.Yii::app()->user->name :Yii::app()->baseUrl.'/site/login'; ?>"><span><?php echo !Yii::app()->user->isGuest ? Yii::app()->user->name : 'Inicia Sesión'; ?></span></a>
   
   <li id="player">
     

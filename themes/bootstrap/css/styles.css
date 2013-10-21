@@ -7,6 +7,34 @@
   padding: 5px;
   border-radius: 10%;
 }
+.devos{
+  z-index: -1;
+}
+
+.item-devo{
+  width: 32%;
+  display: inline-block;
+  vertical-align: top;
+  padding: 2px;
+  background-color: white;
+}
+
+.item-devo h4{
+  position: absolute;
+}
+
+@media (max-width: 900px){
+  .item-devo{
+    width: 49%;
+  }
+}
+
+@media (max-width: 700px){
+  .item-devo{
+    display: block;
+    width: 100%;
+  }
+}
 
 #menu{
   width: 150px;
