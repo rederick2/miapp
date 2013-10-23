@@ -20,11 +20,26 @@
     <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/jquery.pnotify.default.icons.css" media="all" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/ICanHaz.min.js"></script>
+    <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/masonry.min.js"></script>
+    <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/imagesloaded.min.js"></script>
     
 	<?php //Yii::app()->bootstrap->register(); ?>
 </head>
 
 <body>
+
+
+<div id="lightbox">
+    <div class="iclose"><i class="icon-remove"></i></div>
+    <div id="icontent"></div>
+    <div id="sidebar">
+        
+        <textarea rows="6" class="span8" name="ContactForm[body]" id="ContactForm_body"></textarea>
+
+    </div>
+</div>
+
+
 
 <?php
 
@@ -106,7 +121,7 @@
         </div>
          
         <div class="modal-body">
-            <?php $this->widget('application.widgets.facebook.Facebook',array('appId'=>'210521229054903')); ?>
+            <?php $this->widget('application.widgets.facebook.Facebook',array('appId'=>$_SERVER['REMOTE_ADDR'] == '127.0.0.1' ? '210521229054903' : '295295450589424')); ?>
 
             <p class="note">Fields with <span class="required">*</span> are required.</p>
 
@@ -172,10 +187,10 @@
 <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/iscroll.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery.pnotify.min.js"></script>
-<script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/masonry.min.js"></script>
+
 <!--<script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery.history.js"></script>-->
 
-    <script type="text/javascript">
+<script type="text/javascript">
     var s = skrollr.init({
         edgeStrategy: 'set',
         easing: {
@@ -189,9 +204,11 @@
     var $container = $('.devos');
     // initialize
     $container.masonry({
-      //columnWidth: 200,
+      //columnWidth: 250,
       itemSelector: '.item-devo'
     });
+
+    imagesLoaded('.devos');
 </script>
 
 <script>
@@ -216,6 +233,7 @@
           historyedited = true;
           return false;
          });
+ 
         }
 
         function loadContent(url) {
@@ -224,9 +242,74 @@
                 url : url,
             }).done(function(data){
                 $('#content').html(data);
+                
                 doPager();
             });
         }
+
+</script>
+
+<script id="devo" type="text/html">
+      <div id="devo-view">
+        <div id="title">{{title}}</div>
+        <div id="image-devo"><img src="{{url}}"/></div>
+        <div id="text">{{text}}</div>
+      </div>
+</script>
+
+<script>
+
+
+    $('.link-devo').live({ 
+        mouseenter: function(){
+                $(this).children('#info-devo').animate({bottom : '20px'} , 300);
+                $(this).children('#info-devo').children('#details').animate({opacity : '1'} , 200);
+        },
+        mouseleave: function() {
+             $(this).children('#info-devo').animate({bottom : '0px'} , 300);
+             $(this).children('#info-devo').children('#details').animate({opacity : '0'} , 200);
+        }
+    });
+   
+    $('.link-devo').live('click' , function(e){
+
+        e.preventDefault(e);
+        var devo_data, devo;
+
+        var self = $(this);
+
+        $.ajax({
+            url:'<?php echo Yii::app()->baseUrl; ?>/devo/devobyid',
+            type: 'POST',
+            data : {id:$(this).attr('data-id')}
+        }).done(function(msg){
+            //console.log(msg);
+            //text.push(msg);
+            devo_data = {
+                title: self.children('#info-devo').children('h4').text(),
+                url: self.children('img').attr('src'),
+                text: msg,
+            };
+
+            // Here's all the magic.
+            devo = ich.devo(devo_data);
+
+            // append it to the list, tada!
+            //Now go do something more useful with this.
+            $('#icontent').html(devo);
+
+        });
+
+          
+        $('#lightbox').fadeIn(300);
+
+    });
+
+    $('.iclose').live('click' , function(){
+        $(this).parent().fadeOut(300);
+        $('#icontent').html('');
+    });
+    
 
 </script>
 
