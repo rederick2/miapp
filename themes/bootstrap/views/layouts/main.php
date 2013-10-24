@@ -20,7 +20,7 @@
     <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/jquery.pnotify.default.icons.css" media="all" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/ICanHaz.min.js"></script>
-    <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/masonry.min.js"></script>
+    <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/jquery.isotope.min.js"></script>
     <script type="text/javascript" src="<?php echo Yii::app()->theme->baseUrl; ?>/js/imagesloaded.min.js"></script>
     
 	<?php //Yii::app()->bootstrap->register(); ?>
@@ -31,7 +31,7 @@
 
 <div id="lightbox">
     <div class="iclose"><i class="icon-remove"></i></div>
-    <div id="icontent"></div>
+    <div id="icontent"><div id="image-loading"></div></div>
     <div id="sidebar">
         
         <textarea rows="6" class="span8" name="ContactForm[body]" id="ContactForm_body"></textarea>
@@ -39,7 +39,9 @@
     </div>
 </div>
 
-
+<div id="loading">
+    <div id="image-loading"></div>
+</div>
 
 <?php
 
@@ -155,7 +157,7 @@
 
 <div id="menu">
 
-    <img class="imgProfile" src="<?php echo !Yii::app()->user->isGuest ? $user->picture : Yii::app()->baseUrl.'/uploads/user.png'; ?>" />
+    <img class="imgProfile" src="<?php echo Yii::app()->user->isGuest || $user->picture == '' ? Yii::app()->baseUrl.'/uploads/user.png' : $user->picture; ?>" />
 
     <ul>
         <li><a href="#" class="link" data-location="<?php echo Yii::app()->baseUrl.'/site/devos'; ?>"><i class="icon-book"></i>Devocionales</a></li>
@@ -201,18 +203,16 @@
         }
     });
 
-    var $container = $('.devos');
-    // initialize
-    $container.masonry({
-      //columnWidth: 250,
-      itemSelector: '.item-devo'
-    });
-
-    imagesLoaded('.devos');
+   /*$('.devos').isotope({
+      // options
+      itemSelector : '.item-devo',
+      layoutMode : 'fitRows'
+    });*/
 </script>
 
 <script>
       $(document).ready(function() {
+
          if (window.history && history.pushState) {
           historyedited = false;
           $(window).bind('popstate', function(e) {
@@ -228,6 +228,7 @@
         function doPager() {
          $('.link').click(function(e) {
           e.preventDefault();
+          $('.iclose').click();
           loadContent($(this).attr('data-location'));
           history.pushState(null, null, $(this).attr('data-location'));
           historyedited = true;
@@ -237,12 +238,13 @@
         }
 
         function loadContent(url) {
+            $('#loading').show();
             $.ajax({
                 type : 'Post',
                 url : url,
             }).done(function(data){
                 $('#content').html(data);
-                
+                $('#loading').fadeOut();
                 doPager();
             });
         }
@@ -251,23 +253,25 @@
 
 <script id="devo" type="text/html">
       <div id="devo-view">
-        <div id="title">{{title}}</div>
+        <div id="ititle">{{title}}</div>
         <div id="image-devo"><img src="{{url}}"/></div>
-        <div id="text">{{text}}</div>
+        <div id="itext">{{text}}</div>
       </div>
 </script>
 
 <script>
 
 
-    $('.link-devo').live({ 
+    $('.item-devo').live({ 
         mouseenter: function(){
-                $(this).children('#info-devo').animate({bottom : '20px'} , 300);
+                $(this).children('#info-devo').animate({bottom : '30px'} , 300);
                 $(this).children('#info-devo').children('#details').animate({opacity : '1'} , 200);
+                //$(this).children('a').addClass('gradiente');
         },
         mouseleave: function() {
              $(this).children('#info-devo').animate({bottom : '0px'} , 300);
              $(this).children('#info-devo').children('#details').animate({opacity : '0'} , 200);
+             //$(this).children('a').removeClass('gradiente');
         }
     });
    
@@ -307,9 +311,16 @@
 
     $('.iclose').live('click' , function(){
         $(this).parent().fadeOut(300);
-        $('#icontent').html('');
+        $('#icontent').html('<div id="image-loading"></div>');
     });
     
+    $('body').keyup(function(e){
+       // alert(e.keyCode);
+        if(e.keyCode == 27){
+            // Close my modal window
+            $('.iclose').click();
+        }
+    });
 
 </script>
 
