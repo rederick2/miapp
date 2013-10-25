@@ -41,7 +41,55 @@ class DevoController extends Controller
 	function actionDevobyid(){
 		$id = $_POST['id'];
 		$devo = Devos::model()->with('user')->find('id_devo=?', array($id));
-		echo $devo->text;
+
+		$comments = Comment::model()->with('user')->findAll('id_of_type = ?' , array($id));
+		//echo $devo->text;
+		$picture = $devo->user->picture == '' ? Yii::app()->baseUrl.'/uploads/user.png' : $devo->user->picture;
+		$result = array('text' => $devo->text, 
+						'iduser' => $devo->user->id,
+						'username' => $devo->user->username , 
+						'picture' => $picture,
+						'first_name' => $devo->user->first_name,
+						'last_name' => $devo->user->last_name,
+						'comments' => TimelineDate::convertModelToArray($comments));
+
+		echo '['.json_encode($result).']';
+	}
+
+	function actionComment(){
+		$id_user = $_POST['id_user'];
+		$id = $_POST['id'];
+		$text = $_POST['text'];
+
+		$model = new Comment;
+		$model->id_user = $id_user;
+		$model->id_of_type = $id;
+		$model->type = 'Devos';
+		$model->text = $text;
+		$model->create_time = date('Y-m-d G:i:s');
+
+		if($model->save()){
+
+			$user = User::model()->find('id = ?', array($id_user));
+
+			$picture = $user->picture == '' ? Yii::app()->baseUrl.'/uploads/user.png' : $user->picture;
+
+			$result = array( 'success' => 'true', 'text' => $text, 
+						'username' => $user->username , 
+						'picture' => $picture,
+						'first_name' => $user->first_name,
+						'last_name' => $user->last_name);
+
+		}else{
+
+			$result = array( 'success' => 'false', 'text' => 'No se pudo enviar el comentario');
+
+		}
+
+		//$picture = $devo->user->picture == '' ? Yii::app()->baseUrl.'/uploads/user.png' : $devo->user->picture;
+		
+
+		echo '['.json_encode($result).']';
 	}
 
 }

@@ -51,6 +51,10 @@ return array(
 			'allowAutoLogin'=>true,
 		),
 
+		'assetManager' => array(
+		     'linkAssets' => true,
+		   ),
+
 		// uncomment the following to enable URLs in path-format
 		
 		'urlManager'=>array(

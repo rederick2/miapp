@@ -200,7 +200,7 @@
 /************************** LIGHT BOX*******************************************/
 
 #lightbox {
-  background: rgba(255,255,255,.98);
+  background: rgba(255,255,255,.75);
   z-index: 4;
   position: fixed;
   top: 40px;
@@ -214,6 +214,22 @@
   color: white;
   font-size: 2em;
   padding: 5px;
+  background: #242424;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#2e2e2e), to(#1a1a1a));
+  background: -webkit-linear-gradient(0% 0%, 0% 100%, from(#2e2e2e), to(#1a1a1a));
+  background: -moz-linear-gradient(center top, #2e2e2e, #1a1a1a);
+  background: linear-gradient(#2e2e2e, #1a1a1a);
+  padding: 12px 20px 15px;
+  border-bottom: 1px solid rgba(187, 187, 187, 0.1);
+}
+
+#idialog{
+  width: 70%;
+  height: 100%;
+  margin: 0 auto;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+  background-color: white;
 }
 
 #image-devo{
@@ -222,13 +238,12 @@
   overflow: hidden;
   text-align: center;
   background-color: #000000;
-  box-shadow: 0 0 5px rgba(0,0,0,0.75);
 }
 
 #devo-view #itext{
   padding: 5px;
   font-size: 1em;
-  color: white;
+  /*color: white;*/
 }
 
 #lightbox .iclose {
@@ -239,23 +254,77 @@
 }
 
 #lightbox #icontent{
-  width: 79%;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+  width: 70%;
   height: 100%;
-  background-color: rgba(0,0,0,0.75);
   display: inline-block;
   vertical-align: top;
+  color: black;
+  box-shadow: 2px 0 6px 0 rgba(0, 0, 0, 0.1);
+  
+}
+
+#lightbox .sidebar-block {
+  position: relative;
+  padding: 40px 24px 20px 22px;
+  border-top: 0px none;
+  border-bottom: 1px solid #dfdfdf;
 }
 
 #lightbox #sidebar{
-  width: 20%;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+  width: 29%;
   height: 100%;
-  background-color: rgba(255,255,255,0);
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 10px;
+}
+
+#owner-icon {
+  margin-right: 13px;
+  display: inline-block;
+  vertical-align: top;
+}
+.user-img-50 {
+  width: 50px;
+  height: 50px;
+}
+
+#owner-info {
+  min-height: 52px;
+  width: 155px;
+  margin-top: -2px;
+  margin-bottom: 10px;
   display: inline-block;
   vertical-align: top;
 }
 
+#owner-buttons-container {
+  border-top: 1px dotted #ccc;
+  padding: 10px 0 5px;
+}
+
+#owner-buttons-container .fshare{
+  font-size: large;
+  width: 50px;
+}
+
+
 /************************************************************************/
 
+
+/***********************  COMMENTS  *************************************************/
+
+#list_comments #owner-icon-info {
+  font-size: smaller;
+  background-color: #f4f4f4;
+  margin: 5px;
+  padding: 10px 0 0px 10px;
+}
+
+/*******************************************************************************/
 
 @font-face {
   font-family: 'Lato';

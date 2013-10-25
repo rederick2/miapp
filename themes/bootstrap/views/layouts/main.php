@@ -30,12 +30,20 @@
 
 
 <div id="lightbox">
+    
+    <div id="idialog">
     <div class="iclose"><i class="icon-remove"></i></div>
     <div id="icontent"><div id="image-loading"></div></div>
     <div id="sidebar">
-        
-        <textarea rows="6" class="span8" name="ContactForm[body]" id="ContactForm_body"></textarea>
-
+        <div class="sidebar-block"></div>
+        <div id="list_comments"></div>
+        <?php if (!Yii::app()->user->isGuest) : ?>
+            <h6>Agrega Comentario:</h6>
+            <textarea rows="2" class="span7" id="text_comment" name="text_comment" data-id="<?php echo Yii::app()->user->id; ?>" placeholder="Comentario..."></textarea>
+        <?php else : ?>
+            <a class="btn <?php echo !Yii::app()->user->isGuest ? 'link':''; ?>" data-toggle="modal" data-target="#loginModal" href="#" data-location="<?php echo !Yii::app()->user->isGuest ? Yii::app()->baseUrl.'/'.Yii::app()->user->name :Yii::app()->baseUrl.'/site/login'; ?>"><span><?php echo !Yii::app()->user->isGuest ? Yii::app()->user->name : 'Inicia sesión para comentar'; ?></span></a>
+        <?php endif ?>
+    </div>
     </div>
 </div>
 
@@ -252,11 +260,52 @@
 </script>
 
 <script id="devo" type="text/html">
-      <div id="devo-view">
+      <div id="devo-view" data-id="{{id}}">
         <div id="ititle">{{title}}</div>
         <div id="image-devo"><img src="{{url}}"/></div>
         <div id="itext">{{text}}</div>
       </div>
+</script>
+
+<script id="userInfo" type="text/html">
+    
+    <div id="owner-icon-info" class="cfix">
+                <div id="owner-icon" class="user-img-50 left ">
+                    <a href="<?php echo Yii::app()->baseUrl.'/'; ?>{{username}}">
+                        <img src="{{pictureProfile}}">
+                    </a>
+                </div>
+                <div id="owner-info" class="left">
+                    <div id="owners" class="cfix">
+                        <a id="owner" class="text-ellipsis" href="<?php echo Yii::app()->baseUrl.'/'; ?>{{username}}">{{first_name}} {{last_name}}</a>
+                    </div> 
+                </div>
+    </div>
+    <div id="owner-buttons-container" class="clear">
+        <button class="btn btn-info fshare" data-id="{{iduser}}"><i class="icon-facebook"></i></button>
+        <button class="btn btn-primary" data-id="{{iduser}}">Seguir</button>
+        <button class="btn" data-id="{{<?php echo Yii::app()->user->id; ?>}}"><i class="icon-share"></i> Compartir</button>
+    </div>
+
+</script>
+
+<script id="comment" type="text/html">
+    
+    <div id="owner-icon-info" class="cfix">
+                <div id="owner-icon" class="user-img-50 left ">
+                    <a href="<?php echo Yii::app()->baseUrl.'/'; ?>{{username}}">
+                        <img src="{{pictureProfile}}">
+                    </a>
+                </div>
+                <div id="owner-info" class="left">
+                    <div id="owners" class="cfix">
+                        <a id="owner" class="text-ellipsis" href="<?php echo Yii::app()->baseUrl.'/'; ?>{{username}}">{{first_name}} {{last_name}}</a>
+                        <p>{{text}}</p>
+                    </div> 
+                </div>
+                <div di="comment">{{comment}}</div>
+    </div>
+
 </script>
 
 <script>
@@ -278,7 +327,7 @@
     $('.link-devo').live('click' , function(e){
 
         e.preventDefault(e);
-        var devo_data, devo;
+        var devo_data, devo, userInfo_data, userInfo;
 
         var self = $(this);
 
@@ -287,20 +336,59 @@
             type: 'POST',
             data : {id:$(this).attr('data-id')}
         }).done(function(msg){
-            //console.log(msg);
+            
             //text.push(msg);
+            var datos = eval(msg);
+            //console.log(datos);
             devo_data = {
-                title: self.children('#info-devo').children('h4').text(),
+                id: self.attr('data-id'),
+                title: self.parent().children('#info-devo').children('h4').text(),
                 url: self.children('img').attr('src'),
-                text: msg,
+                text: datos[0].text,
+            };
+
+            userInfo_data = {
+                pictureProfile: datos[0].picture,
+                username: datos[0].username,
+                iduser : datos[0].iduser,
+                first_name: datos[0].first_name,
+                last_name : datos[0].last_name,
             };
 
             // Here's all the magic.
             devo = ich.devo(devo_data);
 
+            userInfo = ich.userInfo(userInfo_data);
+
             // append it to the list, tada!
             //Now go do something more useful with this.
             $('#icontent').html(devo);
+            $('.sidebar-block').html(userInfo);
+
+            //console.log(datos[0].comments);
+            var comment, comment_data, comments;
+                //console.log(datos);
+
+                comments = datos[0].comments;
+
+                for (x in comments){
+
+                    comment_data = {
+                        pictureProfile: comments[x].user.picture,
+                        username: comments[x].user.username,
+                        text : comments[x].text,
+                        first_name: comments[x].user.first_name,
+                        last_name : comments[x].user.last_name,
+                    };
+
+                    // Here's all the magic.
+
+                    comment = ich.comment(comment_data);
+
+                    // append it to the list, tada!
+                    //Now go do something more useful with this.
+                    $('#list_comments').append(comment);
+                }
 
         });
 
@@ -310,8 +398,9 @@
     });
 
     $('.iclose').live('click' , function(){
-        $(this).parent().fadeOut(300);
+        $('#lightbox').fadeOut(300);
         $('#icontent').html('<div id="image-loading"></div>');
+        $('#list_comments').html('');
     });
     
     $('body').keyup(function(e){
@@ -319,6 +408,50 @@
         if(e.keyCode == 27){
             // Close my modal window
             $('.iclose').click();
+        }
+    });
+
+    $('#text_comment').keyup(function(e){
+       // alert(e.keyCode);
+        if(e.keyCode == 13){
+
+           var self = $(this);
+
+           $.ajax({
+                url:'<?php echo Yii::app()->baseUrl; ?>/devo/comment',
+                type: 'POST',
+                data : {    id_user:self.attr('data-id'), 
+                            id: $('#devo-view').attr('data-id'),
+                            text: self.val()
+
+                        }
+            }).done(function(msg){
+                
+                //text.push(msg);
+                var datos = eval(msg);
+                var comment, comment_data;
+                //console.log(datos);
+
+                comment_data = {
+                    pictureProfile: datos[0].picture,
+                    username: datos[0].username,
+                    text : datos[0].text,
+                    first_name: datos[0].first_name,
+                    last_name : datos[0].last_name,
+                };
+
+                // Here's all the magic.
+
+                comment = ich.comment(comment_data);
+
+                // append it to the list, tada!
+                //Now go do something more useful with this.
+                $('#list_comments').append(comment);
+
+                self.val('');
+                //self.focus();
+
+            });
         }
     });
 

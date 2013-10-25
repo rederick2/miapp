@@ -20,7 +20,8 @@ class User extends CActiveRecord
         return array(
             'dates'=>array(self::HAS_MANY, 'TimelineDate', 'id_date'),
             'friends'=>array(self::HAS_MANY, 'Friend', 'id'),
-            'devos'=>array(self::HAS_MANY, 'Devos', 'id')
+            'devos'=>array(self::HAS_MANY, 'Devos', 'id_devo'),
+            'comments'=>array(self::HAS_MANY, 'Comment', 'id_comment')
         );
     }
     
