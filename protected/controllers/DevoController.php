@@ -92,4 +92,8 @@ class DevoController extends Controller
 		echo '['.json_encode($result).']';
 	}
 
+	function actionView(){
+		echo $_GET['id'];
+	}
+
 }

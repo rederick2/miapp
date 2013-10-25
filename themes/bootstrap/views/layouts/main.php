@@ -225,6 +225,7 @@
           historyedited = false;
           $(window).bind('popstate', function(e) {
            if (historyedited) {
+            $('.iclose').click();
             loadContent(location.pathname + location.search);
            }
           });
@@ -327,6 +328,11 @@
     $('.link-devo').live('click' , function(e){
 
         e.preventDefault(e);
+
+        history.pushState(null, null, '<?php echo Yii::app()->baseUrl; ?>/devo/'+$(this).attr('data-id'));
+        historyedited = true;
+
+
         var devo_data, devo, userInfo_data, userInfo;
 
         var self = $(this);
