@@ -1,4 +1,10 @@
 <?php
+
+	 $this->widget('ext.timeago.JTimeAgo', array(
+        'selector' => ' .timeago',
+    ));
+
+    
 	echo '<div class="tools"></div>';
 	echo '<div class="devos">';
 

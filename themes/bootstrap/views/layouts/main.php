@@ -63,6 +63,10 @@
             "resumeCallback"=>"onResume", 
             "finishCallback"=>"onFinish"));
 
+    $this->widget('ext.timeago.JTimeAgo', array(
+        'selector' => ' .timeago',
+    ));
+
 
 /*$this->widget('ext.MjmChat.MjmChat', array(
                 'title'=>'Chat room',
@@ -302,6 +306,7 @@
                     <div id="owners" class="cfix">
                         <a id="owner" class="text-ellipsis" href="<?php echo Yii::app()->baseUrl.'/'; ?>{{username}}">{{first_name}} {{last_name}}</a>
                         <p>{{text}}</p>
+                        <abbr class="timeago" title="{{time}}">{{time}}</abbr>
                     </div> 
                 </div>
                 <div di="comment">{{comment}}</div>
@@ -372,19 +377,26 @@
             $('.sidebar-block').html(userInfo);
 
             //console.log(datos[0].comments);
-            var comment, comment_data, comments;
+            var comment, comment_data, comments, picture;
                 //console.log(datos);
 
                 comments = datos[0].comments;
 
                 for (x in comments){
 
+                    if (comments[x].user.picture == '' ){
+                        picture = "<?php echo Yii::app()->baseUrl.'/uploads/user.png' ?>";
+                    }else{
+                        picture = comments[x].user.picture;
+                    };
+
                     comment_data = {
-                        pictureProfile: comments[x].user.picture,
+                        pictureProfile: picture,
                         username: comments[x].user.username,
                         text : comments[x].text,
                         first_name: comments[x].user.first_name,
                         last_name : comments[x].user.last_name,
+                        time : comments[x].create_time,
                     };
 
                     // Here's all the magic.
@@ -395,6 +407,8 @@
                     //Now go do something more useful with this.
                     $('#list_comments').append(comment);
                 }
+
+                $('.timeago').timeago();
 
         });
 
@@ -444,6 +458,7 @@
                     text : datos[0].text,
                     first_name: datos[0].first_name,
                     last_name : datos[0].last_name,
+                    time : datos[0].create_time,
                 };
 
                 // Here's all the magic.
@@ -454,8 +469,11 @@
                 //Now go do something more useful with this.
                 $('#list_comments').append(comment);
 
+                $('#list_comments').animate({scrollTop: $('#list_comments').height()}, 500);
+
                 self.val('');
                 //self.focus();
+                $('.timeago').timeago();
 
             });
         }

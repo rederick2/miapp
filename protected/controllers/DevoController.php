@@ -61,12 +61,16 @@ class DevoController extends Controller
 		$id = $_POST['id'];
 		$text = $_POST['text'];
 
+		date_default_timezone_set('America/Lima');
+
+		$date = date('Y-m-d G:i:s');
+
 		$model = new Comment;
 		$model->id_user = $id_user;
 		$model->id_of_type = $id;
 		$model->type = 'Devos';
 		$model->text = $text;
-		$model->create_time = date('Y-m-d G:i:s');
+		$model->create_time = $date;
 
 		if($model->save()){
 
@@ -78,7 +82,8 @@ class DevoController extends Controller
 						'username' => $user->username , 
 						'picture' => $picture,
 						'first_name' => $user->first_name,
-						'last_name' => $user->last_name);
+						'last_name' => $user->last_name,
+						'create_time' => $date);
 
 		}else{
 

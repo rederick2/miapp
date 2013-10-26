@@ -267,7 +267,7 @@
 
 #lightbox .sidebar-block {
   position: relative;
-  padding: 40px 24px 20px 22px;
+  padding: 37px 19px 16px 10px;
   border-top: 0px none;
   border-bottom: 1px solid #dfdfdf;
 }
@@ -317,11 +317,17 @@
 
 /***********************  COMMENTS  *************************************************/
 
+#list_comments {
+  max-height: 300px;
+  overflow: auto;
+}
+
 #list_comments #owner-icon-info {
   font-size: smaller;
   background-color: #f4f4f4;
   margin: 5px;
   padding: 10px 0 0px 10px;
+
 }
 
 /*******************************************************************************/
